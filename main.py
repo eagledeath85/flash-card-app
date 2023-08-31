@@ -1,10 +1,27 @@
+import random
 from tkinter import Tk, Canvas, PhotoImage, Button
+import pandas
 
 BACKGROUND_COLOR = "#B1DDC6"
 FONT_NAME = "Arial"
+WORDS_DATA_FILE = "C:/Users/aallouche/PycharmProjects/flash-card-app/data/french_words.csv"
 
 
 
+# --------------------------------- DATA PROCESSING --------------------------------- #
+def acces_data():
+    """This method read the csv file and returns the language and random word"""
+    # Read the csv file
+    data_frame = pandas.read_csv(WORDS_DATA_FILE)
+    display_data(data_frame)
+
+def display_data(dataframe=None):
+    """This method displays the data in the flash card"""
+    title_to_display = dataframe["French"].name
+    canvas.itemconfig(title, text=title_to_display)
+    words_list = dataframe.to_dict(orient="records")
+    word_to_display = (random.choice(words_list)).get(title_to_display)
+    canvas.itemconfig(word_to_convert, text=word_to_display)
 
 
 # --------------------------------- UI SETUP --------------------------------- #
@@ -25,11 +42,11 @@ canvas.grid(column=0, row=0, columnspan=2)
 
 # Create buttons
 right_image = PhotoImage(file="images/right.png")
-right_button = Button(image=right_image, highlightthickness=0)
+right_button = Button(image=right_image, highlightthickness=0, command=acces_data)
 right_button.grid(row=1, column=1)
 
 wrong_image = PhotoImage(file="images/wrong.png")
-wrong_button = Button(image=wrong_image, highlightthickness=0)
+wrong_button = Button(image=wrong_image, highlightthickness=0, command=acces_data)
 wrong_button.grid(row=1, column=0)
 
 window.mainloop()
